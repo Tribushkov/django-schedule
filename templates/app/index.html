@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}{{ category_name }}{% endblock %}
+
+{% block body_block %}
+    {% if user.is_authenticated %}
+    <h1>hello {{ user.username }}!</h1>
+    {% else %}
+    <h1>hello world!</h1>
+    {% endif %}
+        {% if categories %}
+            <ul>
+                {% for category in categories %}
+                <li><a href="/category/{{ category.slug }}">{{ category.name }}</a></li>
+                {% endfor %}
+            </ul>
+       {% else %}
+            <strong>There are no categories present.</strong>
+       {% endif %}
+
+        <a href="/add_category/">Add a New Category</a><br />
+
+{% endblock %}
