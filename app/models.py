@@ -13,7 +13,9 @@ class Trip(models.Model):
     seats = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
-            self.duration = str(datetime.combine(date.today(), self.end_time) - datetime.combine(date.today(), self.start_time))
+            end_date = datetime.combine(date.today(), self.end_time)
+            start_date = datetime.combine(date.today(), self.start_time)
+            self.duration = str(end_date - start_date)
             super(Trip, self).save(*args, **kwargs)
 
     def __unicode__(self):
