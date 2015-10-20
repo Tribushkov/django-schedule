@@ -1,25 +1,127 @@
 {% extends 'base.html' %}
-
 {% load staticfiles %}
-
-{% block title %}{{ category_name }}{% endblock %}
-
 {% block body_block %}
-    {% if user.is_authenticated %}
-    <h1>hello {{ user.username }}!</h1>
-    {% else %}
-    <h1>hello world!</h1>
-    {% endif %}
-        {% if categories %}
-            <ul>
-                {% for category in categories %}
-                <li><a href="/category/{{ category.slug }}">{{ category.name }}</a></li>
-                {% endfor %}
-            </ul>
-       {% else %}
-            <strong>There are no categories present.</strong>
-       {% endif %}
 
-        <a href="/add_category/">Add a New Category</a><br />
+    <div class="row">
+        <form method="get" action="">
+          <div class="col-lg-3">
+            <div class="input-group">
+              <input type="text" id="start_input" required="true" name="from" value = "{{ start_point|title }}" placeholder="Откуда..." class="form-control" aria-label="Text input with segmented button dropdown">
+              <div class="input-group-btn ">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    {% for point in start_points %}
+                        <li><a href="#" onclick="fillStartInput(this.innerHTML)">{{ point.start_point|title }}</a></li>
+                    {% endfor %}
+                </ul>
+              </div>
+            </div><!-- /.input-group -->
+          </div><!-- /.col-lg-6 -->
+
+          <div class="col-lg-3">
+            <div class="input-group">
+              <input type="text" id="end_input" required="true"  name="to" value = "{{ end_point|title }}" placeholder="Куда..." class="form-control" aria-label="Text input with segmented button dropdown">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    {% for point in end_points %}
+                        <li><a href="#" onclick="fillEndInput(this.innerHTML)">{{ point.end_point|title }}</a></li>
+                    {% endfor %}
+                </ul>
+              </div>
+            </div><!-- /.input-group -->
+          </div><!-- /.col-lg-6 -->
+
+       <div class="col-lg-3">
+
+            <div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                <input class="form-control" size="16" required="true"  name="date" type="text" placeholder="Когда?" value = "{{ date }}">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-edit"></span></span>
+            </div>
+            <input type="hidden" id="dtp_input2" value="" /><br/>
+
+       </div>
+
+        <div class="col-lg-3">
+            <button type="submit" class="btn btn-warning btn-primary">Найти билеты</button>
+        </div>
+        </form>
+
+        </div>
+
+    {% if index_flag %}
+        <p> Заполните форму поиска и смело жмите кнопку, чтобы найти билеты на поезд по лучшим ценам!</p> <br>
+    {% else %}
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Расписание поездов на выбранную дату:</div>
+            {% if trips %}
+                <table class="table">
+                    <thead>
+                     <tr>
+                      <th><span class="glyphicon glyphicon-plane"></span></th>
+                      <th>Откуда</th>
+                      <th>Посадка</th>
+                      <th>Куда</th>
+                      <th>Прибытие</th>
+                      <th>В пути</th>
+                      <th>Места</th>
+                      <th>Билет</th>
+                     </tr>
+                    </thead>
+                    <tbody>
+                     {% for trip in trips %}
+                        <tr>
+                            <th scope="row">{{ trip.id }}</th>
+                            <td>{{ trip.start_point|title }}</td>
+                            <td>{{ trip.start_time|time:"G:i"}}</td>
+                            <td>{{ trip.end_point|title }}</td>
+                            <td>{{ trip.end_time|time:"G:i" }}</td>
+                            <td>{{ trip.duration|time:"G:i" }}</td>
+                            <td>{{ trip.seats }}</td>
+                            {% if trip.seats %}
+                                {% if user.is_authenticated %}
+                                    <form id="buy_form" method="post" action="/buy_ticket/">
+                                     {% csrf_token %}
+                                     <input type="hidden" name="trip_id" value="{{ trip.id }}">
+                                       <td><a href="javascript:{}" onclick="document.getElementById('buy_form').submit();" >Купить</a></td>
+                                    </form>
+                                 {% else %}
+                                       <td><a href="/accounts/login/">Купить</a></td>
+                                 {% endif %}
+                            {% else %}
+                                 <td style="color:lightgray">Купить</td>
+                            {% endif %}
+                        </tr>
+                     {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <h4 align="center">Ничего не найдено :(</h4>
+        {% endif %}
+    </div>
+    {% endif %}
+
+
+        </div>
+
+        <script>
+        function fillStartInput(name)
+        {
+          document.getElementById('start_input').value = name;
+        }
+        function fillEndInput(name)
+        {
+          document.getElementById('end_input').value = name;
+        }
+        </script>
 
 {% endblock %}
+

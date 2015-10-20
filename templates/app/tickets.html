@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block body_block %}
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Купленные вами билеты:</div>
+{% if tickets %}
+      <table class="table">
+        <thead>
+          <tr>
+              <th>Билет №</th>
+              <th>Откуда</th>
+              <th>Посадка</th>
+              <th>Куда</th>
+              <th>Прибытие</th>
+              <th>В пути</th>
+          </tr>
+        </thead>
+        <tbody>
+
+                {% for ticket in tickets %}
+              <tr>
+                  <th scope="row">{{ ticket.ticket_number}}</th>
+                  <td>{{ ticket.trip.start_point|title }}</td>
+                  <td>{{ ticket.trip.start_time|time:"G:i"}}</td>
+                  <td>{{ ticket.trip.end_point|title }}</td>
+                  <td>{{ ticket.trip.end_time|time:"G:i" }}</td>
+                  <td>{{ ticket.trip.duration|time:"G:i" }}</td>
+              </tr>
+                {% endfor %}
+                        </tbody>
+      </table>
+            {% else %}
+
+
+                <h4 align="center">У вас пока нет билетов.</h4>
+        {% endif %}
+    </div>
+
+
+{% endblock %}

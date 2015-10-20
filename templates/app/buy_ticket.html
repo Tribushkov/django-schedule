@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block body_block %}
+    <div align = "center" class="row">
+    <form class="confirm_form" id="confirm_form" method="post" action="/tickets/">
+        {% csrf_token %}
+        <h5>Подтвердите покупку билета на тур №{{ trip.id }}:</h5><br>
+        <h4>Дата: {{ trip.date|date:"j.n.o" }}</h4><br>
+        <div class="col-lg-12 col-md-offset-3">
+            <div class="col-lg-3 ">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{ trip.start_point }}</div>
+                    <p><b>Отправление: </b> {{ trip.start_time|time:"G:i" }} </p>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="panel panel-default">
+                <div class="panel-heading">{{ trip.end_point }}</div>
+                <p><b>Прибытие: </b> {{ trip.end_time|time:"G:i" }} </p>
+                </div>
+            </div>
+
+                <input type="hidden" name="trip_id" value="{{ trip.id }}">
+
+        </div>
+    <button class="btn btn-warning btn-primary " type="submit" name="submit">Подтверждаю</button>
+            </form>
+    </div>
+
+
+
+{% endblock %}

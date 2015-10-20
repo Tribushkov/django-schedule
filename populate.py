@@ -1,68 +1,59 @@
+# -*- coding: utf-8 -*-
 import os
+from random import randint
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'board.settings')
 
+from datetime import datetime
 import django
 django.setup()
 
-from app.models import Category, Page
+from app.models import *
+
+cities = [
+    'Москва',
+    'Питер',
+    'Омск',
+    'Самара',
+    'Курск',
+    'Зеленоград',
+    'Ростов',
+    'Белгород',
+    'Волгоград',
+]
 
 
 def populate():
-    python_cat = add_cat('Python')
+    for day in range(1,31):
+        for i in range (1,15):
+            start_hour = randint(6, 11)
+            stop_hour = randint(12, 18)
+            start_min = randint(1, 59)
+            stop_min = randint(1, 59)
+            start_time = str(start_hour) + ':' + str(start_min) + ':00'
+            start_time = datetime.strptime(start_time, '%X').time()
+            end_time = str(stop_hour) + ':' + str(stop_min) + ':00'
+            end_time = datetime.strptime(end_time, '%X').time()
+            date = '2015-10-' + str(day)
+            for start_city in cities:
+                start_city = start_city.decode('utf-8').upper()
+                for stop_city in cities:
+                    seats = randint(0, 10)
+                    stop_city = stop_city.decode('utf-8').upper()
+                    add_trip(start_city, stop_city, start_time, end_time, date, seats)
 
-    add_page(cat=python_cat,
-        title="Official Python Tutorial",
-        url="http://docs.python.org/2/tutorial/")
 
-    add_page(cat=python_cat,
-        title="How to Think like a Computer Scientist",
-        url="http://www.greenteapress.com/thinkpython/")
+def add_trip(start_point, end_point, start_time, end_time, date, seats):
+    t = Trip(
+        start_point = start_point,
+        end_point = end_point,
+        start_time = start_time,
+        end_time = end_time,
+        date = date,
+        seats = seats
+    )
+    t.save()
+    return t
 
-    add_page(cat=python_cat,
-        title="Learn Python in 10 Minutes",
-        url="http://www.korokithakis.net/tutorials/python/")
-
-    django_cat = add_cat("Django")
-
-    add_page(cat=django_cat,
-        title="Official Django Tutorial",
-        url="https://docs.djangoproject.com/en/1.5/intro/tutorial01/")
-
-    add_page(cat=django_cat,
-        title="Django Rocks",
-        url="http://www.djangorocks.com/")
-
-    add_page(cat=django_cat,
-        title="How to Tango with Django",
-        url="http://www.tangowithdjango.com/")
-
-    frame_cat = add_cat("Other Frameworks")
-
-    add_page(cat=frame_cat,
-        title="Bottle",
-        url="http://bottlepy.org/docs/dev/")
-
-    add_page(cat=frame_cat,
-        title="Flask",
-        url="http://flask.pocoo.org")
-
-    # Print out what we have added to the user.
-    for c in Category.objects.all():
-        for p in Page.objects.filter(category=c):
-            print "- {0} - {1}".format(str(c), str(p))
-
-def add_page(cat, title, url, views=0):
-    p = Page.objects.get_or_create(category=cat, title=title)[0]
-    p.url=url
-    p.views=views
-    p.save()
-    return p
-
-def add_cat(name):
-    c = Category.objects.get_or_create(name=name)[0]
-    return c
-
-# Start execution here!
 if __name__ == '__main__':
     print "Starting population script..."
     populate()

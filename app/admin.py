@@ -1,13 +1,18 @@
 from django.contrib import admin
-from app.models import Category, Page, UserProfile
+from app.models import Trip, Ticket
 
-# Add in this class to customized the Admin Interface
-class CategoryAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug':('name',)}
 
-# Update the registeration to include this customised interface
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Page)
-admin.site.register(UserProfile)
+class TripAdmin(admin.ModelAdmin):
+    exclude = ('slug', 'duration')
+    list_display = ('date', 'start_time', 'start_point', 'end_point', 'seats')
+
+
+class TicketAdmin(admin.ModelAdmin):
+    list_display = ('trip', 'user')
+
+admin.site.register(Trip, TripAdmin)
+admin.site.register(Ticket, TicketAdmin)
+
+
 
 
