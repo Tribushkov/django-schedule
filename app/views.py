@@ -20,7 +20,9 @@ def index(request):
         end_point = end_point.upper().encode('utf-8')
         date = date.encode('utf-8')
         formatted_date = helpers.parse_date(date)
-        trips = Trip.objects.all().filter(start_point=start_point, end_point=end_point, date=formatted_date).order_by('-start_time').reverse()
+        trips = Trip.objects.all().filter(start_point=start_point,
+                                          end_point=end_point,
+                                          date=formatted_date).order_by('-start_time').reverse()
 
         context_dict = {'start_point': start_point,
                         'end_point': end_point,

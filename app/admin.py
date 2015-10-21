@@ -12,7 +12,3 @@ class TicketAdmin(admin.ModelAdmin):
 
 admin.site.register(Trip, TripAdmin)
 admin.site.register(Ticket, TicketAdmin)
-
-
-
-

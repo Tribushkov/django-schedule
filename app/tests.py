@@ -23,13 +23,13 @@ class ModelTests(TestCase):
         self.assertEqual(str(trip.seats), '0')
 
 
-def add_trip(start_point, end_point, start_time, end_time, date, seats=0):
+def add_trip(start_point, end_point, start_time, end_time, trip_date, seats=0):
     t = Trip(
         start_point=start_point,
         end_point=end_point,
         start_time=start_time,
         end_time=end_time,
-        date=date,
+        date=trip_date,
         seats=seats
     )
     t.save()

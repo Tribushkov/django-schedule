@@ -26,4 +26,3 @@ def parse_date(date):
         return str(formatted_date)
     except:
         return None
-
