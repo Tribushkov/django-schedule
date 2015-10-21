@@ -29,8 +29,8 @@ def populate():
         for i in range(1, TRIPS):
             start_hour = randint(6, 11)
             stop_hour = randint(12, 18)
-            start_min = randint(1, 60)
-            stop_min = randint(1, 60)
+            start_min = randint(1, 59)
+            stop_min = randint(1, 59)
             start_time = str(start_hour) + ':' + str(start_min) + ':00'
             start_time = datetime.strptime(start_time, '%X').time()
             end_time = str(stop_hour) + ':' + str(stop_min) + ':00'
