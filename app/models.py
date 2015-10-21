@@ -13,6 +13,8 @@ class Trip(models.Model):
     seats = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
+            self.start_point = self.start_point.upper()
+            self.end_point = self.end_point.upper()
             end_date = datetime.combine(date.today(), self.end_time)
             start_date = datetime.combine(date.today(), self.start_time)
             self.duration = str(end_date - start_date)
